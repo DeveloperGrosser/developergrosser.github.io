@@ -258,6 +258,83 @@ function drawPlayer() {
 
   ctx.save();
   ctx.translate(player.x, player.y);
+  ctx.rotate(-player.vx * 0.033);
+
+  // Flame
+  const fh = player.boosting ? 28 + Math.random() * 14 : 14 + Math.random() * 8;
+  const fg = ctx.createLinearGradient(0, 22, 0, 22 + fh);
+  fg.addColorStop(0,   player.boosting ? '#fff' : '#ff0');
+  fg.addColorStop(0.35, '#f80');
+  fg.addColorStop(1,   'transparent');
+  ctx.fillStyle = fg;
+  ctx.beginPath();
+  ctx.moveTo(-9, 22); ctx.lineTo(9, 22);
+  ctx.lineTo(Math.random() * 6 - 3, 22 + fh);
+  ctx.closePath(); ctx.fill();
+
+  // Hull
+  ctx.fillStyle = player.shield > 0 ? '#0cf' : '#c44';
+  ctx.beginPath();
+  ctx.moveTo( 0, -26); ctx.lineTo(-20, 26);
+  ctx.lineTo(-8, 19);  ctx.lineTo(  0, 26);
+  ctx.lineTo( 8, 19);  ctx.lineTo( 20, 26);
+  ctx.closePath(); ctx.fill();
+
+  // Wings
+  ctx.fillStyle = player.boosting ? '#fa0' : '#08a';
+  ctx.beginPath(); ctx.moveTo(-20, 26); ctx.lineTo(-32, 14); ctx.lineTo(-22, 4); ctx.closePath(); ctx.fill();
+  ctx.beginPath(); ctx.moveTo( 20, 26); ctx.lineTo( 32, 14); ctx.lineTo( 22, 4); ctx.closePath(); ctx.fill();
+
+  // Cockpit
+  ctx.fillStyle = '#0ff';
+  ctx.beginPath(); ctx.arc(0, -8, 6, 0, Math.PI * 2); ctx.fill();
+
+  // Glow outline
+  ctx.shadowColor = player.boosting ? '#f80' : '#0ff';
+  ctx.shadowBlur  = player.boosting ? 22 : 14;
+  ctx.strokeStyle = ctx.shadowColor;
+  ctx.lineWidth   = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(0, -26); ctx.lineTo(-20, 26); ctx.lineTo(20, 26); ctx.closePath();
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+
+  // Shield bubble
+  if (player.shield > 0) {
+    const sa = (player.shield / player.maxShield) * 0.28 + 0.05;
+    ctx.strokeStyle = 'rgba(0,220,255,' + sa + ')';
+    ctx.lineWidth   = 2;
+    ctx.shadowColor = '#0cf';
+    ctx.shadowBlur  = 8;
+    ctx.beginPath(); ctx.ellipse(0, 0, 30, 34, 0, 0, Math.PI * 2); ctx.stroke();
+    ctx.shadowBlur = 0;
+  }
+
+  ctx.restore();
+}
+
+// ================================================================
+//  PLAYER BULLETS
+// ================================================================
+function shoot() {
+  audio.play('shoot');
+  if (player.spreadShot) {
+    bullets.push({ x: player.x,      y: player.y - 26, vx:   0,   vy: -13 });
+    bullets.push({ x: player.x -  8, y: player.y - 18, vx:  -2.8, vy: -12 });
+    bullets.push({ x: player.x +  8, y: player.y - 18, vx:   2.8, vy: -12 });
+  } else {
+    bullets.push({ x: player.x, y: player.y - 26, vx: 0, vy: -13 });
+  }
+}
+
+function updateBullets() {
+  for (let i = bullets.length - 1; i >= 0; i--) {
+    bullets[i].x += bullets[i].vx;
+    bullets[i].y += bullets[i].vy;
+    if (bullets[i].y < -20 || bullets[i].x < -10 || bullets[i].x > canvas.width + 10)
+      bullets.splice(i, 1);
+  }
+}
 
   // Triebwerk-Flamme mit zufälliger Höhe für Flacker-Effekt
   const flameHeight = 15 + Math.random() * 10;
@@ -303,6 +380,92 @@ function drawPlayer() {
   ctx.closePath();
   ctx.stroke();
   ctx.shadowBlur = 0;
+}
+
+// ================================================================
+//  ENEMY BULLETS
+// ================================================================
+function updateEBullets() {
+  for (let i = eBullets.length - 1; i >= 0; i--) {
+    const eb = eBullets[i];
+    eb.x += eb.vx; eb.y += eb.vy;
+    if (eb.y > canvas.height + 20 || eb.y < -20 || eb.x < -20 || eb.x > canvas.width + 20) {
+      eBullets.splice(i, 1); continue;
+    }
+    if (player.invincible <= 0 &&
+        Math.abs(eb.x - player.x) < 14 && Math.abs(eb.y - player.y) < 18) {
+      eBullets.splice(i, 1);
+      spawnExp(eb.x, eb.y, '#f88', 8);
+      hitPlayer();
+    }
+  }
+}
+
+function drawEBullets() {
+  eBullets.forEach(eb => {
+    ctx.shadowColor = eb.col || '#f44';
+    ctx.shadowBlur  = 8;
+    ctx.fillStyle   = eb.col || '#f44';
+    ctx.beginPath();
+    ctx.arc(eb.x, eb.y, eb.r || 4, 0, Math.PI * 2);
+    ctx.fill();
+  });
+  ctx.shadowBlur = 0;
+}
+
+// ================================================================
+//  ENEMIES
+// ================================================================
+function mkEnemy(overrides) {
+  const rnd = Math.random();
+  let type;
+  if      (rnd < 0.55) type = 'standard';
+  else if (rnd < 0.75) type = 'fast';
+  else if (rnd < 0.88) type = 'tank';
+  else                 type = 'sniper';
+
+  const base = {
+    x: Math.random() * (canvas.width - 60) + 30,
+    y: -35,
+    vx: 0, vy: 0,
+    shootTimer: 60 + Math.floor(Math.random() * 80),
+    ...(overrides || {})
+  };
+
+  const defs = {
+    standard: { w: 30, h: 30, speed: game.enemySpeed + Math.random() * 1.5, hp: 1, maxHp: 1, col: '#f55', pts: 10 },
+    fast:     { w: 22, h: 22, speed: game.enemySpeed + 2.5 + Math.random(), hp: 1, maxHp: 1, col: '#f0f', pts: 20 },
+    tank:     { w: 40, h: 40, speed: game.enemySpeed * 0.6,                 hp: 3, maxHp: 3, col: '#fa0', pts: 30 },
+    sniper:   { w: 28, h: 28, speed: game.enemySpeed * 0.75,                hp: 2, maxHp: 2, col: '#0f8', pts: 25, shootTimer: 70 },
+  };
+
+  const t = (overrides && overrides.type) ? overrides.type : type;
+  return Object.assign({}, base, { type: t }, defs[t]);
+}
+
+function spawnFormation() {
+  const cx = Math.random() * (canvas.width - 220) + 110;
+  [{ dx: 0, dy: 0 }, { dx: -55, dy: 28 }, { dx: 55, dy: 28 },
+   { dx: -110, dy: 56 }, { dx: 110, dy: 56 }
+  ].forEach(p => enemies.push(mkEnemy({ type: 'standard', x: cx + p.dx, y: -55 + p.dy })));
+}
+
+function enemyFire(e) {
+  const dx = player.x - e.x, dy = player.y - e.y;
+  const d  = Math.hypot(dx, dy);
+  if (e.type === 'sniper') {
+    eBullets.push({ x: e.x, y: e.y + e.h / 2, vx: dx / d * 7, vy: dy / d * 7, r: 5, col: '#0ff' });
+    audio.play('enemyshoot');
+  } else if (e.type === 'tank') {
+    [-0.3, 0, 0.3].forEach(off => {
+      const ang = Math.atan2(dy, dx) + off;
+      eBullets.push({ x: e.x, y: e.y + e.h / 2, vx: Math.cos(ang) * 3, vy: Math.sin(ang) * 3, r: 4, col: '#fa0' });
+    });
+    audio.play('enemyshoot');
+  } else {
+    eBullets.push({ x: e.x, y: e.y + e.h / 2, vx: 0, vy: 3.2, r: 3, col: '#f55' });
+  }
+}
 
   ctx.restore();
 }
@@ -407,6 +570,17 @@ function updateEnemies() {
   for (let i = enemies.length - 1; i >= 0; i--) {
     const e = enemies[i];
     e.y += e.speed;
+    if (e.type === 'fast')   e.x += Math.sin(game.frameCount * 0.1 + i * 1.4) * 2.5;
+    if (e.type === 'sniper') e.x += Math.sin(game.frameCount * 0.03 + i) * 0.6;
+    e.x = Math.max(10, Math.min(canvas.width - 10, e.x));
+
+    if (game.wave >= 2) {
+      e.shootTimer--;
+      if (e.shootTimer <= 0) {
+        enemyFire(e);
+        e.shootTimer = (e.type === 'sniper' ? 90 : 120) + Math.floor(Math.random() * 100);
+      }
+    }
 
     // Schnelle Gegner bewegen sich seitlich (Sinusbewegung)
     if (e.type === 'fast') {
@@ -426,6 +600,9 @@ function updateEnemies() {
       loseLife();
       continue;
     }
+    if (dead) continue;
+  }
+}
 
     // Kollision Gegner → Projektile
     for (let j = bullets.length - 1; j >= 0; j--) {
@@ -451,6 +628,53 @@ function drawEnemies() {
   enemies.forEach(e => {
     ctx.save();
     ctx.translate(e.x, e.y);
+    ctx.shadowColor = e.col;
+    ctx.shadowBlur  = 8;
+    ctx.fillStyle   = e.col;
+
+    if (e.type === 'standard') {
+      ctx.beginPath();
+      ctx.moveTo(0, -15); ctx.lineTo(-15, 10);
+      ctx.lineTo(-5, 5);  ctx.lineTo(0, 15);
+      ctx.lineTo(5, 5);   ctx.lineTo(15, 10);
+      ctx.closePath(); ctx.fill();
+    } else if (e.type === 'fast') {
+      ctx.beginPath();
+      ctx.moveTo(0, -12); ctx.lineTo(-12, 12); ctx.lineTo(12, 12);
+      ctx.closePath(); ctx.fill();
+    } else if (e.type === 'tank') {
+      ctx.beginPath();
+      for (let k = 0; k < 6; k++) {
+        const a = (Math.PI / 3) * k - Math.PI / 2;
+        k === 0 ? ctx.moveTo(Math.cos(a)*20, Math.sin(a)*20)
+                : ctx.lineTo(Math.cos(a)*20, Math.sin(a)*20);
+      }
+      ctx.closePath(); ctx.fill();
+      const bw = 36;
+      ctx.fillStyle = '#300';  ctx.fillRect(-bw/2, -27, bw, 4);
+      ctx.fillStyle = '#f80';  ctx.fillRect(-bw/2, -27, bw * (e.hp / e.maxHp), 4);
+      ctx.fillStyle = '#fff';  ctx.font = '11px Courier New'; ctx.textAlign = 'center';
+      ctx.shadowBlur = 0;      ctx.fillText(e.hp, 0, 5);
+    } else if (e.type === 'sniper') {
+      ctx.beginPath();
+      ctx.moveTo(0, -15); ctx.lineTo(14, 0); ctx.lineTo(0, 15); ctx.lineTo(-14, 0);
+      ctx.closePath(); ctx.fill();
+      if (e.shootTimer < 28) {
+        const alpha = (28 - e.shootTimer) / 28 * 0.55;
+        ctx.strokeStyle = 'rgba(0,255,140,' + alpha + ')';
+        ctx.lineWidth   = 1;
+        ctx.shadowBlur  = 0;
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(player.x - e.x, player.y - e.y);
+        ctx.stroke();
+      }
+    }
+
+    ctx.shadowBlur = 0;
+    ctx.restore();
+  });
+}
 
     if (e.type === 'standard') {
       // Standard: invertiertes Dreieck (Pfeil nach unten)
@@ -492,6 +716,7 @@ function drawEnemies() {
       ctx.textAlign = 'center';
       ctx.fillText(e.hp, 0, 5);
     }
+  }
 
     ctx.restore();
   });
@@ -581,6 +806,7 @@ function checkLevelUp() {
    ══════════════════════════════ */
 function gameLoop() {
   if (!game.running) return;
+  if (game.paused)   { requestAnimationFrame(gameLoop); return; }
 
   // Hintergrund schwarz füllen
   ctx.fillStyle = '#000';
@@ -605,7 +831,10 @@ function gameLoop() {
   updateParticles();
   drawParticles();
 
-  checkLevelUp();
+  updateEBullets();  drawEBullets();
+  updatePowerUps();  drawPowerUps();
+  updateParticles(); drawParticles();
+  updateFloatTexts(); drawFloatTexts();
 
   requestAnimationFrame(gameLoop);
 }
@@ -637,6 +866,8 @@ function startGame() {
   // Menü-Bildschirme ausblenden
   document.getElementById('startScreen').style.display = 'none';
   document.getElementById('gameOverScreen').style.display = 'none';
+  document.getElementById('upgradeScreen').style.display  = 'none';
+  document.getElementById('announcement').style.display   = 'none';
 
   gameLoop();
 }
@@ -658,6 +889,7 @@ document.addEventListener('keydown', e => {
   game.keys[e.code] = true;
   if (e.code === 'Space') e.preventDefault(); // Scrollen durch Leertaste verhindern
 });
+document.addEventListener('keyup', function(e) { game.keys[e.code] = false; });
 
 // Taste wieder freigeben
 document.addEventListener('keyup', e => {
