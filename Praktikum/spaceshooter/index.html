@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Space Shooter</title>
+<style>
+/* ── Reset ── */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #000; overflow: hidden; font-family: 'Courier New', monospace; color: #fff; }
+canvas { display: block; margin: 0 auto; }
+
+/* ── Overlay-Screens ── */
+.overlay {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  background: rgba(0,0,0,0.88); z-index: 20;
+}
+.overlay.hidden { display: none; }
+
+h1 { font-size: 44px; margin-bottom: 8px; color: #0ff; text-shadow: 0 0 20px #0ff; }
+h2 { font-size: 26px; color: #f55; text-shadow: 0 0 15px #f55; margin-bottom: 8px; }
+h3 { color: #0ff; margin-bottom: 6px; font-size: 16px; }
+.info { font-size: 14px; color: #aaa; margin-bottom: 20px; text-align: center; line-height: 1.6; }
+
+/* ── Buttons ── */
+button, .btn {
+  padding: 10px 32px; font-size: 17px; font-family: 'Courier New', monospace;
+  background: transparent; color: #0ff; border: 2px solid #0ff;
+  cursor: pointer; transition: all 0.25s; margin: 4px;
+}
+button:hover, .btn:hover { background: #0ff; color: #000; }
+button:disabled { opacity: 0.3; cursor: default; }
+button:disabled:hover { background: transparent; color: #0ff; }
+
+.btn-row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin: 8px 0; }
+
+/* ── Schiffsauswahl ── */
+.ship-cards { display: flex; gap: 12px; margin: 12px 0; flex-wrap: wrap; justify-content: center; }
+.ship-card {
+  border: 2px solid #333; padding: 14px; width: 180px; text-align: center;
+  cursor: pointer; transition: border-color 0.2s; border-radius: 6px;
+}
+.ship-card:hover { border-color: #0ff; }
+.ship-card.selected { border-color: #0ff; background: rgba(0,255,255,0.06); }
+.ship-card .ship-name { color: #0ff; font-size: 16px; font-weight: bold; }
+.ship-card .ship-desc { color: #888; font-size: 11px; margin-top: 4px; }
+.ship-card .ship-stats { color: #aaa; font-size: 10px; margin-top: 6px; line-height: 1.5; }
+
+/* ── Farbauswahl ── */
+.color-row { display: flex; gap: 8px; margin: 8px 0; justify-content: center; }
+.color-swatch {
+  width: 28px; height: 28px; border-radius: 50%; border: 2px solid #333;
+  cursor: pointer; transition: border-color 0.2s;
+}
+.color-swatch:hover { border-color: #fff; }
+.color-swatch.selected { border-color: #fff; box-shadow: 0 0 8px rgba(255,255,255,0.5); }
+.color-swatch.locked { opacity: 0.25; cursor: not-allowed; }
+
+/* ── Shop ── */
+.shop-paths { display: flex; gap: 14px; margin: 12px 0; flex-wrap: wrap; justify-content: center; }
+.shop-path {
+  border: 1px solid #333; padding: 14px; width: 200px; text-align: center;
+  border-radius: 6px;
+}
+.shop-path h3 { color: #0ff; margin-bottom: 6px; }
+.shop-path p { color: #ccc; font-size: 12px; margin-bottom: 8px; }
+
+/* ── Fraktionen ── */
+.faction-cards { display: flex; gap: 12px; margin: 12px 0; flex-wrap: wrap; justify-content: center; }
+.faction-card {
+  border: 2px solid #333; padding: 16px; width: 200px; text-align: center;
+  cursor: pointer; transition: border-color 0.2s; border-radius: 6px;
+}
+.faction-card:hover { border-color: #fff; }
+.faction-card .faction-name { font-size: 18px; font-weight: bold; margin-bottom: 4px; }
+.faction-card .faction-desc { color: #aaa; font-size: 11px; }
+
+/* ── Navigations-Links ── */
+.screen-nav {
+  margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+}
+.screen-nav a {
+  font-size: 12px; color: #0ff; text-decoration: none; border: 1px solid #0ff;
+  padding: 4px 10px; border-radius: 3px; opacity: 0.6; transition: all 0.2s;
+}
+.screen-nav a:hover { opacity: 1; background: rgba(0,255,255,0.1); }
+
+#finalScore { font-size: 20px; color: #ff0; margin: 12px 0; }
+.sub { font-size: 11px; color: #666; margin-top: 6px; }
+</style>
+</head>
+<body>
+
+<canvas id="gameCanvas"></canvas>
+
+<!-- ═══════════ STARTBILDSCHIRM ═══════════ -->
+<div id="startScreen" class="overlay">
+  <h1>⚡ SPACE SHOOTER ⚡</h1>
+  <div class="info">
+    Pfeiltasten / WASD — Bewegen &nbsp;|&nbsp; Leertaste — Schießen<br>
+    Shift — Boost &nbsp;|&nbsp; Doppeltipp ← → — Barrel Roll<br>
+    1/2/3 — Energie: Schild / Waffen / Triebwerk<br>
+    E — Spezialfähigkeit
+  </div>
+  <div class="btn-row">
+    <button id="btn1P">1 SPIELER</button>
+    <button id="btn2P">2 SPIELER</button>
+  </div>
+  <p class="sub">Spieler 2: WASD + Q (Schießen) + Tab (Boost)</p>
+  <nav class="screen-nav">
+    <a href="../index.html">← Startseite</a>
+  </nav>
+</div>
+
+<!-- ═══════════ SCHIFFSAUSWAHL ═══════════ -->
+<div id="shipSelectScreen" class="overlay hidden">
+  <h2>Schiff wählen</h2>
+  <div id="shipSelectLabel" class="info">Spieler 1</div>
+  <div class="ship-cards" id="shipCards"></div>
+  <div class="info" style="margin-top:8px">Farbe:</div>
+  <div class="color-row" id="colorRow"></div>
+  <button id="btnConfirmShip">WEITER</button>
+</div>
+
+<!-- ═══════════ SHOP ═══════════ -->
+<div id="shopScreen" class="overlay hidden">
+  <h2>UPGRADE-SHOP</h2>
+  <div id="shopCredits" style="color:#4f4;margin-bottom:8px"></div>
+  <div class="shop-paths" id="shopItems"></div>
+  <button id="btnCloseShop">WEITER</button>
+</div>
+
+<!-- ═══════════ FRAKTIONSWAHL ═══════════ -->
+<div id="factionScreen" class="overlay hidden">
+  <h2>Fraktion wählen</h2>
+  <div class="info">Deine Wahl beeinflusst Boni und Spielverlauf.</div>
+  <div class="faction-cards" id="factionCards"></div>
+</div>
+
+<!-- ═══════════ GAME OVER ═══════════ -->
+<div id="gameOverScreen" class="overlay hidden">
+  <h2>GAME OVER</h2>
+  <div id="finalScore"></div>
+  <div class="btn-row">
+    <button id="btnRestart">NOCHMAL</button>
+  </div>
+  <nav class="screen-nav">
+    <a href="../index.html">← Startseite</a>
+  </nav>
+</div>
+
+<!-- ═══════════ HAUPTSCRIPT ═══════════ -->
+<script type="module">
+import { Game } from './js/game.js';
+import { SHIPS, COLORS, FACTIONS } from './js/config.js';
+
+const canvas = document.getElementById('gameCanvas');
+const game = new Game(canvas);
+
+/* ── Schiffskarten generieren ── */
+function renderShipCards(selectedShip, selectedColor, forP2) {
+  const container = document.getElementById('shipCards');
+  container.innerHTML = '';
+  for (const [key, ship] of Object.entries(SHIPS)) {
+    const card = document.createElement('div');
+    card.className = 'ship-card' + ((forP2 ? game.selectedShip2 : game.selectedShip) === key ? ' selected' : '');
+    card.innerHTML = `
+      <div class="ship-name">${ship.name}</div>
+      <div class="ship-desc">${ship.desc}</div>
+      <div class="ship-stats">
+        Speed: ${'█'.repeat(Math.round(ship.speed * 3))}${'░'.repeat(4 - Math.round(ship.speed * 3))}<br>
+        Feuer: ${'█'.repeat(Math.round(ship.fireRate * 3))}${'░'.repeat(4 - Math.round(ship.fireRate * 3))}<br>
+        HP: ${'█'.repeat(ship.maxHp)}${'░'.repeat(5 - ship.maxHp)}
+      </div>`;
+    card.onclick = () => {
+      if (forP2) game.selectedShip2 = key; else game.selectedShip = key;
+      renderShipCards(null, null, forP2);
+    };
+    container.appendChild(card);
+  }
+
+  const colorRow = document.getElementById('colorRow');
+  colorRow.innerHTML = '';
+  for (const [key, col] of Object.entries(COLORS)) {
+    const s = document.createElement('div');
+    s.className = 'color-swatch';
+    s.style.background = col.hull;
+    const cSel = forP2 ? game.selectedColor2 : game.selectedColor;
+    if (cSel === key) s.classList.add('selected');
+    if (!game.story.isSkinUnlocked(key)) {
+      s.classList.add('locked');
+      s.title = '🔒 Noch nicht freigeschaltet';
+    } else {
+      s.onclick = () => {
+        if (forP2) game.selectedColor2 = key; else game.selectedColor = key;
+        renderShipCards(null, null, forP2);
+      };
+    }
+    colorRow.appendChild(s);
+  }
+}
+
+/* ── Fraktionskarten generieren ── */
+function renderFactionCards() {
+  const container = document.getElementById('factionCards');
+  container.innerHTML = '';
+  for (const [key, f] of Object.entries(FACTIONS)) {
+    const card = document.createElement('div');
+    card.className = 'faction-card';
+    card.innerHTML = `<div class="faction-name" style="color:${f.color}">${f.name}</div>
+      <div class="faction-desc">${f.desc}</div>`;
+    card.onclick = () => game.chooseFaction(key);
+    container.appendChild(card);
+  }
+}
+renderFactionCards();
+
+/* ── P2-Auswahlphase für Koop ── */
+let selectingP2 = false;
+
+function openShipSelect(forP2) {
+  selectingP2 = forP2;
+  document.getElementById('shipSelectLabel').textContent = forP2 ? 'Spieler 2' : 'Spieler 1';
+  renderShipCards(null, null, forP2);
+  document.getElementById('shipSelectScreen').classList.remove('hidden');
+  document.getElementById('shipSelectScreen').style.display = 'flex';
+}
+
+/* ── Start-Buttons ── */
+document.getElementById('btn1P').onclick = () => {
+  document.getElementById('startScreen').style.display = 'none';
+  game.coop = false;
+  openShipSelect(false);
+};
+
+document.getElementById('btn2P').onclick = () => {
+  document.getElementById('startScreen').style.display = 'none';
+  game.coop = true;
+  openShipSelect(false);
+};
+
+document.getElementById('btnConfirmShip').onclick = () => {
+  if (game.coop && !selectingP2) {
+    document.getElementById('shipSelectScreen').style.display = 'none';
+    openShipSelect(true);
+    return;
+  }
+  document.getElementById('shipSelectScreen').style.display = 'none';
+  game.hideScreens();
+  game.startGame();
+};
+
+/* ── Shop schließen ── */
+document.getElementById('btnCloseShop').onclick = () => game.closeShop();
+
+/* ── Shop Credits aktualisieren ── */
+const shopObs = new MutationObserver(() => {
+  const el = document.getElementById('shopCredits');
+  if (el && document.getElementById('shopScreen').style.display !== 'none')
+    el.textContent = `Credits: ${game.credits}`;
+});
+shopObs.observe(document.getElementById('shopScreen'), { attributes: true, attributeFilter: ['style'] });
+
+/* ── Neustart ── */
+document.getElementById('btnRestart').onclick = () => {
+  document.getElementById('gameOverScreen').style.display = 'none';
+  document.getElementById('startScreen').style.display = 'flex';
+  game.state = 'menu';
+  game._bgLoop();
+};
+</script>
+</body>
+</html>
