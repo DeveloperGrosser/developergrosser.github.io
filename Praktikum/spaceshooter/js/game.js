@@ -75,6 +75,7 @@ export class Game {
     this.state = 'playing';
     this.fc = 0;
     this.credits = 0;
+    this._score = 0;
     this.techLevels = { offense: 0, defense: 0, utility: 0 };
 
     this.players = [new Player(this.selectedShip, this.selectedColor, false)];
@@ -543,6 +544,8 @@ export class Game {
     const el = document.getElementById('shopScreen');
     if (!el) return;
     el.style.display = 'flex';
+    const credEl = document.getElementById('shopCredits');
+    if (credEl) credEl.textContent = `Credits: ${this.credits}`;
     this._renderShopContent();
   }
 
@@ -583,6 +586,8 @@ export class Game {
             }
           });
           this.audio.play('buy');
+          const credEl = document.getElementById('shopCredits');
+          if (credEl) credEl.textContent = `Credits: ${this.credits}`;
           this._renderShopContent();
         }
       };
@@ -594,6 +599,7 @@ export class Game {
     if (el) el.style.display = 'none';
     this.state = 'playing';
     this.waveDelay = 60;
+    this._loop();
   }
 
   _showFactionSelect() {
@@ -607,6 +613,7 @@ export class Game {
     const el = document.getElementById('factionScreen');
     if (el) el.style.display = 'none';
     this.state = 'playing';
+    this._loop();
   }
 
   _showGameOver(score, wave) {
