@@ -1,110 +1,197 @@
-<!DOCTYPE html>  
-<html lang="de">  
-<head>  
-    <meta charset="UTF-8">  
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-    <title>Maximilian Grosser</title>  
-    <link rel="stylesheet" href="style.css">  
-</head>  
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maximilian Grosser</title>
+    <!-- Externes Stylesheet einbinden -->
+    <link rel="stylesheet" href="style.css">
+</head>
 <body>
 
-    <!-- ── Navigation ── -->  
-    <nav class="navbar">  
-        <div class="nav-container">  
-            <a href="#top" class="nav-logo">MG<span class="dot">.</span></a>  
-            <ul class="nav-links">  
-                <li><a href="#" data-target="readme">README</a></li>  
-                <li><a href="#" data-target="system">System</a></li>  
-                <li><a href="#" data-target="skills">Skills</a></li>  
-            </ul>              
-        </div>  
+    <!-- ── Navigation ── -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <!-- Logo / Home-Link -->
+            <a href="#top" class="nav-logo">MG<span class="dot">.</span></a>
+
+            <!-- Hamburger-Button (nur auf kleinen Bildschirmen sichtbar) -->
+            <button class="hamburger" id="hamburger" aria-label="Menü öffnen">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <!-- Navigationslinks – auf Mobil per Hamburger ein-/ausblendbar -->
+            <ul class="nav-links" id="nav-links">
+                <!-- Seiteninterne Scroll-Links mit data-target -->
+                <li><a href="#" data-target="readme">README</a></li>
+                <li><a href="#" data-target="system">System</a></li>
+                <li><a href="#" data-target="skills">Skills</a></li>
+                <!-- Links zu anderen Seiten -->
+                <li><a href="lebenslauf.html">Lebenslauf</a></li>
+                <li><a href="spaceshooter.html">Game</a></li>
+            </ul>
+        </div>
     </nav>
 
-    <!-- ── Header ── -->  
-    <header id="top">  
-        <div class="container">  
-            <h1 class="fade-in">Maximilian Grosser<span class="cursor">_</span></h1>  
-            <p class="subtitle fade-in delay-1">// Praktikant &middot; IT-Abteilung &middot; fischer</p>  
-        </div>  
+    <!-- ── Header / Hero-Bereich ── -->
+    <header id="top">
+        <div class="container">
+            <!-- Animierter Titel mit blinkendem Cursor -->
+            <h1 class="fade-in">Maximilian Grosser<span class="cursor">_</span></h1>
+            <p class="subtitle fade-in delay-1">// Praktikant &middot; IT-Abteilung &middot; fischer</p>
+        </div>
     </header>
 
-    <!-- ── Main ── -->  
-    <main>  
+    <!-- ── Hauptinhalt ── -->
+    <main>
         <div class="container">
 
-            <section class="card slide-up" id="readme">  
-                <h2>&gt; README</h2>  
-                <p>  
-                    Hi, mein Name ist Maximilian. Ich programmiere gerne und wollte mir  
-                    im Zuge dieses Praktikums die IT-Abteilung in einem Unternehmen  
-                    anschauen. Da war natürlich fischer die beste Option – nicht nur,  
-                    weil mein Vater dort arbeitet, sondern auch, weil ich viel von ihm  
-                    über die interessante IT-Arbeit bei fischer gehört habe. Mein  
-                    Praktikum war bisher sehr interessant. Am besten hat mir bisher die  
-                    Einführung in die IT-Abteilung und das eigenständige Programmieren  
-                    gefallen.  
-                </p>  
+            <!-- README-Sektion: kurze Vorstellung -->
+            <section class="card slide-up" id="readme">
+                <h2>&gt; README</h2>
+                <p>
+                    Hi, mein Name ist Maximilian. Ich programmiere gerne und wollte mir
+                    im Zuge dieses Praktikums die IT-Abteilung in einem Unternehmen
+                    anschauen. Da war natürlich fischer die beste Option – nicht nur,
+                    weil mein Vater dort arbeitet, sondern auch, weil ich viel von ihm
+                    über die interessante IT-Arbeit bei fischer gehört habe. Mein
+                    Praktikum war bisher sehr interessant. Am besten hat mir bisher die
+                    Einführung in die IT-Abteilung und das eigenständige Programmieren
+                    gefallen.
+                </p>
             </section>
 
-            <section class="card slide-up delay-1" id="system">  
-                <h2>&gt; Systeminformations</h2>  
-                <table class="info-table">  
-                    <tr><td class="key">id:</td><td>Maximilian Simon Grosser</td></tr>  
-                    <tr><td class="key">port type:</td><td>male</td></tr>  
-                    <tr><td class="key">production date:</td><td>27.06.2010</td></tr>  
-                    <tr><td class="key">home file location:</td><td>earth/germany/pfalzgrafenweiler/sommerrain/2</td></tr>  
-                    <tr><td class="key">current grade:</td><td>9</td></tr>  
-                </table>  
+            <!-- System-Sektion: persönliche „Metadaten" als Tabelle -->
+            <section class="card slide-up delay-1" id="system">
+                <h2>&gt; Systeminformations</h2>
+                <table class="info-table">
+                    <tr><td class="key">id:</td><td>Maximilian Simon Grosser</td></tr>
+                    <tr><td class="key">port type:</td><td>male</td></tr>
+                    <tr><td class="key">production date:</td><td>27.06.2010</td></tr>
+                    <tr><td class="key">home file location:</td><td>earth/germany/pfalzgrafenweiler/sommerrain/2</td></tr>
+                    <tr><td class="key">current grade:</td><td>9</td></tr>
+                </table>
             </section>
 
-            <section class="card slide-up delay-2" id="skills">  
-                <h2>&gt; Skills</h2>  
-                <ul class="skills-list">  
-                    <li><strong>Prompt</strong> Engineering</li>  
-                    <li><strong>Dart</strong> Code</li>  
-                    <li><strong>HTML/CSS</strong> Code</li>  
-                    <li>Design in <strong>Figma</strong></li>  
-                    <li>Play <strong>Guitar</strong></li>  
-                </ul>  
+            <!-- Skills-Sektion: Fähigkeiten als Pill-Tags -->
+            <section class="card slide-up delay-2" id="skills">
+                <h2>&gt; Skills</h2>
+                <ul class="skills-list">
+                    <li><strong>Prompt</strong> Engineering</li>
+                    <li><strong>Dart</strong> Code</li>
+                    <li><strong>HTML/CSS</strong> Code</li>
+                    <li>Design in <strong>Figma</strong></li>
+                    <li>Play <strong>Guitar</strong></li>
+                </ul>
             </section>
 
-        </div>  
+            <!-- Bilder-Sektion: Zwei Bilder, die jeweils als Link dienen -->
+            <section class="card slide-up delay-3" id="bilder">
+                <h2>&gt; Meine Interessen</h2>
+                <p class="card-desc">Klick auf ein Bild, um mehr zu erfahren.</p>
+                <div class="image-grid">
+
+                    <!-- Bild 1: Gitarre – verlinkt auf Wikipedia-Artikel zur Gitarre -->
+                    <a href="https://de.wikipedia.org/wiki/Gitarre"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="img-link"
+                       title="Mehr über Gitarre erfahren">
+                        <img
+                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/GuitareClassique5.png/220px-GuitareClassique5.png"
+                            alt="Eine klassische Gitarre – mein Lieblingsinstrument"
+                            loading="lazy">
+                        <span class="img-caption">🎸 Gitarre</span>
+                    </a>
+
+                    <!-- Bild 2: Minecraft – verlinkt auf die offizielle Minecraft-Seite -->
+                    <a href="https://www.minecraft.net/de-de"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="img-link"
+                       title="Minecraft – mein Lieblingsspiel">
+                        <img
+                            src="https://upload.wikimedia.org/wikipedia/en/thumb/5/51/Minecraft_logo.svg/320px-Minecraft_logo.svg.png"
+                            alt="Das Minecraft-Logo – mein Lieblingsspiel"
+                            loading="lazy">
+                        <span class="img-caption">🎮 Minecraft</span>
+                    </a>
+
+                </div>
+            </section>
+
+            <!-- Video-Sektion: Eingebettetes YouTube-Video (datenschutzfreundlich) -->
+            <section class="card slide-up" id="video">
+                <h2>&gt; Lieblingsvideo</h2>
+                <p class="card-desc">Ein Video, das ich jedem empfehlen kann:</p>
+                <!-- iframe-Einbettung über youtube-nocookie.com zum Schutz der Privatsphäre -->
+                <div class="video-wrapper">
+                    <iframe
+                        src="https://www.youtube-nocookie.com/embed/C4UUGqvAFBo"
+                        title="Minecraft – The Story of Mojang (Dokumentation)"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                        loading="lazy">
+                    </iframe>
+                </div>
+            </section>
+
+        </div>
     </main>
 
-    <!-- ── Footer ── -->  
-    <footer>  
-        <div class="container">  
-            <p>&copy; 2026 Maximilian Grosser &middot; Praktikum bei fischer</p>  
-        </div>  
+    <!-- ── Footer ── -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Maximilian Grosser &middot; Praktikum bei fischer</p>
+        </div>
     </footer>
-  
-<script>  
-    document.querySelectorAll('.nav-links a').forEach(function(link) {  
-        link.addEventListener('click', function(e) {  
+
+<script>
+    /* ── Hamburger-Menü ──────────────────────────────────────────── */
+    var hamburger = document.getElementById('hamburger');
+    var navLinks  = document.getElementById('nav-links');
+
+    // Klick auf Hamburger-Icon: Menü öffnen / schließen
+    hamburger.addEventListener('click', function() {
+        var isOpen = navLinks.classList.toggle('open');
+        // Aria-Attribut für Barrierefreiheit aktualisieren
+        hamburger.setAttribute('aria-expanded', isOpen);
+    });
+
+    /* ── Seiteninterne Scroll-Navigation ────────────────────────── */
+    document.querySelectorAll('.nav-links a[data-target]').forEach(function(link) {
+        link.addEventListener('click', function(e) {
             e.preventDefault();
 
-            // Alte Glow-Klasse von allen Cards entfernen  
-            document.querySelectorAll('.card').forEach(function(card) {  
-                card.classList.remove('glow');  
+            // Menü auf Mobilgeräten nach Klick schließen
+            navLinks.classList.remove('open');
+            hamburger.setAttribute('aria-expanded', false);
+
+            // Alte Glow-Klasse von allen Cards entfernen
+            document.querySelectorAll('.card').forEach(function(card) {
+                card.classList.remove('glow');
             });
 
-            // Ziel-Card finden  
-            var targetId = this.getAttribute('data-target');  
+            // Ziel-Card anhand des data-target-Attributs ermitteln
+            var targetId   = this.getAttribute('data-target');
             var targetCard = document.getElementById(targetId);
 
-            if (targetCard) {  
-                // Zur Section scrollen  
+            if (targetCard) {
+                // Sanftes Scrollen zur Ziel-Section
                 targetCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-                // Glow-Effekt nach kurzem Delay auslösen  
-                setTimeout(function() {  
-                    void targetCard.offsetWidth;  
-                    targetCard.classList.add('glow');  
-                }, 400);  
-            }  
-        });  
-    });  
-</script>  
+                // Glow-Effekt nach kurzem Delay auslösen (nach Scroll-Ende)
+                setTimeout(function() {
+                    void targetCard.offsetWidth; // Reflow erzwingen für Neustart der Animation
+                    targetCard.classList.add('glow');
+                }, 400);
+            }
+        });
+    });
+</script>
 
-</body>  
-</html>  
+</body>
+</html>
+

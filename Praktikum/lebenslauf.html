@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lebenslauf – Maximilian Grosser</title>
+    <!-- Gemeinsames Stylesheet für alle Praktikum-Seiten -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ── Navigation ── -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <!-- Logo führt zurück zur Hauptseite -->
+            <a href="index.html" class="nav-logo">MG<span class="dot">.</span></a>
+
+            <!-- Hamburger-Button (nur auf kleinen Bildschirmen sichtbar) -->
+            <button class="hamburger" id="hamburger" aria-label="Menü öffnen">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <!-- Navigationslinks zwischen den Seiten -->
+            <ul class="nav-links" id="nav-links">
+                <li><a href="index.html">Startseite</a></li>
+                <!-- Aktuell aktive Seite hervorheben -->
+                <li><a href="lebenslauf.html" class="nav-active">Lebenslauf</a></li>
+                <li><a href="spaceshooter.html">Game</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ── Header / Hero-Bereich ── -->
+    <header id="top">
+        <div class="container">
+            <h1 class="fade-in">Lebenslauf<span class="cursor">_</span></h1>
+            <p class="subtitle fade-in delay-1">// Maximilian Simon Grosser &middot; Jahrgang 2010</p>
+        </div>
+    </header>
+
+    <!-- ── Hauptinhalt ── -->
+    <main>
+        <div class="container">
+
+            <!-- ── Schulischer Werdegang ── -->
+            <section class="card slide-up" id="bildung">
+                <h2>&gt; Schulbildung</h2>
+                <!-- Tabellarische Übersicht des Bildungswegs -->
+                <table class="info-table cv-table">
+                    <thead>
+                        <tr>
+                            <th class="key">Zeitraum</th>
+                            <th>Schule / Institution</th>
+                            <th>Ort</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="key">2017 – 2021</td>
+                            <td>Grundschule</td>
+                            <td>Pfalzgrafenweiler</td>
+                        </tr>
+                        <tr>
+                            <td class="key">2021 – heute</td>
+                            <td>Realschule / Gymnasium (aktuell Klasse 9)</td>
+                            <td>Pfalzgrafenweiler</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- ── Praktika & Berufserfahrung ── -->
+            <section class="card slide-up delay-1" id="erfahrung">
+                <h2>&gt; Praktika &amp; Erfahrung</h2>
+                <table class="info-table cv-table">
+                    <thead>
+                        <tr>
+                            <th class="key">Zeitraum</th>
+                            <th>Tätigkeit</th>
+                            <th>Unternehmen</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="key">2026</td>
+                            <!-- Hervorhebung des aktuellen Praktikums -->
+                            <td>Schülerpraktikum IT-Abteilung <span class="badge">aktuell</span></td>
+                            <td>fischerwerke GmbH &amp; Co. KG</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- ── Kenntnisse & Fähigkeiten ── -->
+            <section class="card slide-up delay-2" id="kenntnisse">
+                <h2>&gt; Kenntnisse</h2>
+                <table class="info-table cv-table">
+                    <thead>
+                        <tr>
+                            <th class="key">Bereich</th>
+                            <th>Fähigkeit / Tool</th>
+                            <th>Niveau</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="key">Programmierung</td>
+                            <td>Dart / Flutter</td>
+                            <td>⭐⭐⭐</td>
+                        </tr>
+                        <tr>
+                            <td class="key">Web</td>
+                            <td>HTML &amp; CSS</td>
+                            <td>⭐⭐⭐</td>
+                        </tr>
+                        <tr>
+                            <td class="key">KI</td>
+                            <td>Prompt Engineering</td>
+                            <td>⭐⭐⭐⭐</td>
+                        </tr>
+                        <tr>
+                            <td class="key">Design</td>
+                            <td>Figma</td>
+                            <td>⭐⭐⭐</td>
+                        </tr>
+                        <tr>
+                            <td class="key">Sprachen</td>
+                            <td>Deutsch (Muttersprache), Englisch</td>
+                            <td>⭐⭐⭐⭐⭐ / ⭐⭐⭐</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- ── Hobbys & Interessen ── -->
+            <section class="card slide-up delay-3" id="hobbys">
+                <h2>&gt; Hobbys &amp; Interessen</h2>
+                <!-- Pill-Tags analog zur Skills-Liste auf der Startseite -->
+                <ul class="skills-list">
+                    <li>🎸 <strong>Gitarre</strong> spielen</li>
+                    <li>💻 <strong>Programmieren</strong></li>
+                    <li>🎮 <strong>Gaming</strong> (Minecraft)</li>
+                    <li>📐 <strong>App-Design</strong> in Figma</li>
+                    <li>🤖 <strong>KI</strong> &amp; Prompt Engineering</li>
+                </ul>
+
+                <!-- Kurzer Fließtext zu den Hobbys -->
+                <p style="margin-top: 1.2rem;">
+                    In meiner Freizeit spiele ich regelmäßig Gitarre und versuche immer
+                    wieder neue Songs zu lernen. Außerdem entwickle ich eigene kleine
+                    Apps und Spiele mit Flutter/Dart und experimentiere gerne mit
+                    KI-Tools wie ChatGPT oder Copilot.
+                </p>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- ── Footer ── -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Maximilian Grosser &middot; Praktikum bei fischer</p>
+        </div>
+    </footer>
+
+<script>
+    /* ── Hamburger-Menü ──────────────────────────────────────────── */
+    var hamburger = document.getElementById('hamburger');
+    var navLinks  = document.getElementById('nav-links');
+
+    // Klick auf Hamburger-Icon: Menü ein- oder ausklappen
+    hamburger.addEventListener('click', function() {
+        var isOpen = navLinks.classList.toggle('open');
+        hamburger.setAttribute('aria-expanded', isOpen);
+    });
+</script>
+
+</body>
+</html>
