@@ -1,0 +1,110 @@
+<!DOCTYPE html>  
+<html lang="de">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>Maximilian Grosser</title>  
+    <link rel="stylesheet" href="style.css">  
+</head>  
+<body>
+
+    <!-- ── Navigation ── -->  
+    <nav class="navbar">  
+        <div class="nav-container">  
+            <a href="#top" class="nav-logo">MG<span class="dot">.</span></a>  
+            <ul class="nav-links">  
+                <li><a href="#" data-target="readme">README</a></li>  
+                <li><a href="#" data-target="system">System</a></li>  
+                <li><a href="#" data-target="skills">Skills</a></li>  
+            </ul>              
+        </div>  
+    </nav>
+
+    <!-- ── Header ── -->  
+    <header id="top">  
+        <div class="container">  
+            <h1 class="fade-in">Maximilian Grosser<span class="cursor">_</span></h1>  
+            <p class="subtitle fade-in delay-1">// Praktikant &middot; IT-Abteilung &middot; fischer</p>  
+        </div>  
+    </header>
+
+    <!-- ── Main ── -->  
+    <main>  
+        <div class="container">
+
+            <section class="card slide-up" id="readme">  
+                <h2>&gt; README</h2>  
+                <p>  
+                    Hi, mein Name ist Maximilian. Ich programmiere gerne und wollte mir  
+                    im Zuge dieses Praktikums die IT-Abteilung in einem Unternehmen  
+                    anschauen. Da war natürlich fischer die beste Option – nicht nur,  
+                    weil mein Vater dort arbeitet, sondern auch, weil ich viel von ihm  
+                    über die interessante IT-Arbeit bei fischer gehört habe. Mein  
+                    Praktikum war bisher sehr interessant. Am besten hat mir bisher die  
+                    Einführung in die IT-Abteilung und das eigenständige Programmieren  
+                    gefallen.  
+                </p>  
+            </section>
+
+            <section class="card slide-up delay-1" id="system">  
+                <h2>&gt; Systeminformations</h2>  
+                <table class="info-table">  
+                    <tr><td class="key">id:</td><td>Maximilian Simon Grosser</td></tr>  
+                    <tr><td class="key">port type:</td><td>male</td></tr>  
+                    <tr><td class="key">production date:</td><td>27.06.2010</td></tr>  
+                    <tr><td class="key">home file location:</td><td>earth/germany/pfalzgrafenweiler/sommerrain/2</td></tr>  
+                    <tr><td class="key">current grade:</td><td>9</td></tr>  
+                </table>  
+            </section>
+
+            <section class="card slide-up delay-2" id="skills">  
+                <h2>&gt; Skills</h2>  
+                <ul class="skills-list">  
+                    <li><strong>Prompt</strong> Engineering</li>  
+                    <li><strong>Dart</strong> Code</li>  
+                    <li><strong>HTML/CSS</strong> Code</li>  
+                    <li>Design in <strong>Figma</strong></li>  
+                    <li>Play <strong>Guitar</strong></li>  
+                </ul>  
+            </section>
+
+        </div>  
+    </main>
+
+    <!-- ── Footer ── -->  
+    <footer>  
+        <div class="container">  
+            <p>&copy; 2026 Maximilian Grosser &middot; Praktikum bei fischer</p>  
+        </div>  
+    </footer>
+  
+<script>  
+    document.querySelectorAll('.nav-links a').forEach(function(link) {  
+        link.addEventListener('click', function(e) {  
+            e.preventDefault();
+
+            // Alte Glow-Klasse von allen Cards entfernen  
+            document.querySelectorAll('.card').forEach(function(card) {  
+                card.classList.remove('glow');  
+            });
+
+            // Ziel-Card finden  
+            var targetId = this.getAttribute('data-target');  
+            var targetCard = document.getElementById(targetId);
+
+            if (targetCard) {  
+                // Zur Section scrollen  
+                targetCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                // Glow-Effekt nach kurzem Delay auslösen  
+                setTimeout(function() {  
+                    void targetCard.offsetWidth;  
+                    targetCard.classList.add('glow');  
+                }, 400);  
+            }  
+        });  
+    });  
+</script>  
+
+</body>  
+</html>  
